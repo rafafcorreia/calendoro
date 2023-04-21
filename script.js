@@ -4,7 +4,7 @@ let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('e
 let daySelected = document.createElement('div');
 let selectedDayString;
 let justStarted = true;
-let taskNodeIndex;
+let dateIndex;
 let daySelectedTasks = null;
 let selectedTask = null;
 
@@ -20,7 +20,7 @@ function verifyExistentTasks() {
   for (let i = 0; i < events.length; i++) {
     const date = events[i].date;
     if (date == selectedDayString) {
-      taskNodeIndex = i;
+      dateIndex = i;
       return true;
     }
   }
@@ -51,24 +51,6 @@ function refreshTasks() {
 
       tasklist.appendChild(taskDiv);
     });
-    /* for (let i = 0; i < daySelectedTasks.tasksNodes.length; i++) {
-      const task = daySelectedTasks.tasksNodes[i];
-      
-      console.log(task);
-      const taskDiv = document.createElement('div');
-      taskDiv.classList.add('task');
-      taskDiv.innerText = task.title;
-      console.log(task.title);
-  
-      taskDiv.addEventListener('click', () => {
-        console.log('Cliquei na tarefa!!!')
-        document.getElementById('eventText').innerText = task.title;
-        taskNodeIndex = i;
-        deleteEventModal.style.display = 'block';
-      })
-  
-      tasklist.appendChild(taskDiv);
-    } */
 
   } catch (error) {
     tasklist.replaceChildren();
@@ -192,7 +174,7 @@ function saveEvent() {
 
     // Verifica se há alguma task cadastrada na data selecionada
     if (verifyExistentTasks()) {
-      events[taskNodeIndex].tasksNodes.push(
+      events[dateIndex].tasksNodes.push(
         {
           title: eventTitleInput.value,
           done: false
@@ -209,7 +191,6 @@ function saveEvent() {
           }
         ]
         }
-        // title: eventTitleInput.value,
       );
     }
 
@@ -225,11 +206,21 @@ function saveEvent() {
 
 // TODO
 function deleteEvent() {
-  events = events.filter(e => {e.date !== selectedDayString});
-  
-  localStorage.setItem('events', JSON.stringify(events));
-
   daySelectedTasks = events.find(e => e.date === selectedDayString);
+  
+  console.log('DELETE');
+  console.log(daySelectedTasks);
+
+  daySelectedTasks.tasksNodes = daySelectedTasks.tasksNodes.filter(e => e.title != selectedTask.title);
+
+  console.log(daySelectedTasks);
+  
+  if (daySelectedTasks.tasksNodes.length == 0) {
+    events = events.filter(e => e.date !== selectedDayString);
+  }
+
+  localStorage.setItem('events', JSON.stringify(events));
+  
   refreshTasks();
   closeModal();
 }

@@ -38,14 +38,31 @@ function refreshTasks() {
     tasklist.replaceChildren();
     for (let i = 0; i < daySelectedTasks.tasksNodes.length; i++) {
       const task = daySelectedTasks.tasksNodes[i];
-      console.log(task);
+      // console.log(task);
       const taskDiv = document.createElement('div');
-      taskDiv.classList.add('task');
-      taskDiv.innerText = task.title;
-      console.log(task.title);
+      taskDiv.classList.add('taskDiv');
+      
+      const taskTitle = document.createElement('div');
+      taskTitle.classList.add('taskTitle');
+      taskTitle.innerText = task.title;
+      // console.log(task.title);
 
-      taskDiv.addEventListener('click', () => {
-        console.log('Cliquei na tarefa!!!')
+      taskDiv.appendChild(taskTitle);
+      
+      const iconPomodoro = document.createElement('img')
+
+      if (task.done) {
+        iconPomodoro.src = './img/iconRedPomodoro.png';
+      }
+      iconPomodoro.src = './img/iconGreenPomodoro.png';
+
+      iconPomodoro.addEventListener('click', () => {
+        console.log('Cliquei no Pomodoro');
+      })
+
+      taskDiv.appendChild(iconPomodoro);
+
+      taskTitle.addEventListener('click', () => {
         document.getElementById('taskEditTitleInput').value = task.title;
         selectedTask = task;
         selectedTaskIndex = i;

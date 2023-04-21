@@ -1,6 +1,6 @@
 let nav = 0;
 let clicked = null;
-let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [];
+let tasks = localStorage.getItem('tasks') ? JSON.parse(localStorage.getItem('tasks')) : [];
 let daySelected = document.createElement('div');
 let selectedDayString;
 let justStarted = true;
@@ -10,16 +10,16 @@ let selectedTask = null;
 let selectedTaskIndex;
 
 const calendar = document.getElementById('calendar');
-const newEventModal = document.getElementById('newEventModal');
-const deleteEventModal = document.getElementById('deleteEventModal');
+const newTaskModal = document.getElementById('newTaskModal');
+const deleteTaskModal = document.getElementById('deleteTaskModal');
 const backDrop = document.getElementById('modalBackDrop');
-const eventTitleInput = document.getElementById('eventTitleInput');
+const taskTitleInput = document.getElementById('taskTitleInput');
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const tasklist = document.getElementById('tasklist');
 
 function verifyExistentTasks() {
-  for (let i = 0; i < events.length; i++) {
-    const date = events[i].date;
+  for (let i = 0; i < tasks.length; i++) {
+    const date = tasks[i].date;
     if (date == selectedDayString) {
       dateIndex = i;
       return true;
@@ -46,10 +46,10 @@ function refreshTasks() {
 
       taskDiv.addEventListener('click', () => {
         console.log('Cliquei na tarefa!!!')
-        document.getElementById('eventEditTitleInput').value = task.title;
+        document.getElementById('taskEditTitleInput').value = task.title;
         selectedTask = task;
         selectedTaskIndex = i;
-        deleteEventModal.style.display = 'block';
+        deleteTaskModal.style.display = 'block';
       })
 
       tasklist.appendChild(taskDiv);
@@ -60,23 +60,6 @@ function refreshTasks() {
     console.log(error);
   }
 
-}
-
-function openModal() {
-
-  // clicked = date;
-  const eventForDay = events.find(e => e.date === selectedDayString);
-
-  /* if (eventForDay) {
-    document.getElementById('eventText').innerText = eventForDay.title;
-    deleteEventModal.style.display = 'block';
-  } else {
-    newEventModal.style.display = 'block';
-  } */
-
-  newEventModal.style.display = 'block';
-
-  backDrop.style.display = 'block';
 }
 
 function load() {
@@ -116,7 +99,7 @@ function load() {
     if (i > paddingDays) {
       
       daySquare.innerText = i - paddingDays;
-      const tasksForDay = events.find(e => e.date === dayString);
+      const tasksForDay = tasks.find(e => e.date === dayString);
 
       // Data atual
       if (i - paddingDays === day && nav === 0) {
@@ -145,7 +128,6 @@ function load() {
       }
 
       daySquare.addEventListener('click', () => {
-        // openModal(dayString);
         justStarted = false;
         selectedDayString = dayString;
         refreshSelectedDay(daySquare);
@@ -162,34 +144,34 @@ function load() {
 }
 
 function closeModal() {
-  eventTitleInput.classList.remove('error');
-  newEventModal.style.display = 'none';
-  deleteEventModal.style.display = 'none';
+  taskTitleInput.classList.remove('error');
+  newTaskModal.style.display = 'none';
+  deleteTaskModal.style.display = 'none';
   backDrop.style.display = 'none';
-  eventTitleInput.value = '';
+  taskTitleInput.value = '';
   clicked = null;
   load();
 }
 
-function addEvent() {
-  if (eventTitleInput.value) {
-    eventTitleInput.classList.remove('error');
+function createTask() {
+  if (taskTitleInput.value) {
+    taskTitleInput.classList.remove('error');
 
     // Verifica se há alguma task cadastrada na data selecionada
     if (verifyExistentTasks()) {
-      events[dateIndex].tasksNodes.push(
+      tasks[dateIndex].tasksNodes.push(
         {
-          title: eventTitleInput.value,
+          title: taskTitleInput.value,
           done: false
         }
       );
     }
     else {
-      events.push({
+      tasks.push({
         date: selectedDayString,
         tasksNodes: [
           {
-            title: eventTitleInput.value,
+            title: taskTitleInput.value,
             done: false
           }
         ]
@@ -197,23 +179,23 @@ function addEvent() {
       );
     }
 
-    localStorage.setItem('events', JSON.stringify(events));
+    localStorage.setItem('tasks', JSON.stringify(tasks));
     
-    daySelectedTasks = events.find(e => e.date === selectedDayString);
+    daySelectedTasks = tasks.find(e => e.date === selectedDayString);
     refreshTasks();
     closeModal();
   } else {
-    eventTitleInput.classList.add('error');
+    taskTitleInput.classList.add('error');
   }
 }
 
-function editEvent() {
-  if (eventEditTitleInput.value) {
-    eventEditTitleInput.classList.remove('error');
+function saveTask() {
+  if (taskEditTitleInput.value) {
+    taskEditTitleInput.classList.remove('error');
 
-    daySelectedTasks.tasksNodes[selectedTaskIndex].title = eventEditTitleInput.value;
+    daySelectedTasks.tasksNodes[selectedTaskIndex].title = taskEditTitleInput.value;
 
-    localStorage.setItem('events', JSON.stringify(events));
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 
     refreshTasks();
     closeModal();
@@ -224,8 +206,8 @@ function editEvent() {
 }
 
 // TODO
-function deleteEvent() {
-  daySelectedTasks = events.find(e => e.date === selectedDayString);
+function deleteTask() {
+  daySelectedTasks = tasks.find(e => e.date === selectedDayString);
   
   console.log('DELETE');
   console.log(daySelectedTasks);
@@ -235,17 +217,19 @@ function deleteEvent() {
   console.log(daySelectedTasks);
   
   if (daySelectedTasks.tasksNodes.length == 0) {
-    events = events.filter(e => e.date !== selectedDayString);
+    tasks = tasks.filter(e => e.date !== selectedDayString);
   }
 
-  localStorage.setItem('events', JSON.stringify(events));
+  localStorage.setItem('tasks', JSON.stringify(tasks));
   
   refreshTasks();
   closeModal();
 }
 
 function addTask() {
-  openModal();
+  newTaskModal.style.display = 'block';
+
+  backDrop.style.display = 'block';
 }
 
 function initButtons() {
@@ -259,10 +243,10 @@ function initButtons() {
     load();
   });
 
-  document.getElementById('addButton').addEventListener('click', addEvent);
+  document.getElementById('addButton').addEventListener('click', createTask);
   document.getElementById('cancelButton').addEventListener('click', closeModal);
-  document.getElementById('saveButton').addEventListener('click', editEvent);
-  document.getElementById('deleteButton').addEventListener('click', deleteEvent);
+  document.getElementById('saveButton').addEventListener('click', saveTask);
+  document.getElementById('deleteButton').addEventListener('click', deleteTask);
   document.getElementById('closeButton').addEventListener('click', closeModal);
   document.getElementById('btnAddTask').addEventListener('click', addTask);
 }

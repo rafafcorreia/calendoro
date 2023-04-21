@@ -7,6 +7,7 @@ let justStarted = true;
 let dateIndex;
 let daySelectedTasks = null;
 let selectedTask = null;
+let selectedTaskIndex;
 
 const calendar = document.getElementById('calendar');
 const newEventModal = document.getElementById('newEventModal');
@@ -35,7 +36,8 @@ function refreshSelectedDay(daySquare) {
 function refreshTasks() {
   try {
     tasklist.replaceChildren();
-    daySelectedTasks.tasksNodes.forEach(task => {
+    for (let i = 0; i < daySelectedTasks.tasksNodes.length; i++) {
+      const task = daySelectedTasks.tasksNodes[i];
       console.log(task);
       const taskDiv = document.createElement('div');
       taskDiv.classList.add('task');
@@ -44,13 +46,14 @@ function refreshTasks() {
 
       taskDiv.addEventListener('click', () => {
         console.log('Cliquei na tarefa!!!')
-        document.getElementById('eventText').innerText = task.title;
+        document.getElementById('eventEditTitleInput').value = task.title;
         selectedTask = task;
+        selectedTaskIndex = i;
         deleteEventModal.style.display = 'block';
       })
 
       tasklist.appendChild(taskDiv);
-    });
+    }
 
   } catch (error) {
     tasklist.replaceChildren();
@@ -168,7 +171,7 @@ function closeModal() {
   load();
 }
 
-function saveEvent() {
+function addEvent() {
   if (eventTitleInput.value) {
     eventTitleInput.classList.remove('error');
 
@@ -201,6 +204,22 @@ function saveEvent() {
     closeModal();
   } else {
     eventTitleInput.classList.add('error');
+  }
+}
+
+function editEvent() {
+  if (eventEditTitleInput.value) {
+    eventEditTitleInput.classList.remove('error');
+
+    daySelectedTasks.tasksNodes[selectedTaskIndex].title = eventEditTitleInput.value;
+
+    localStorage.setItem('events', JSON.stringify(events));
+
+    refreshTasks();
+    closeModal();
+
+  } else {
+    taskTitleInput.classList.add('error');
   }
 }
 
@@ -240,8 +259,9 @@ function initButtons() {
     load();
   });
 
-  document.getElementById('saveButton').addEventListener('click', saveEvent);
+  document.getElementById('addButton').addEventListener('click', addEvent);
   document.getElementById('cancelButton').addEventListener('click', closeModal);
+  document.getElementById('saveButton').addEventListener('click', editEvent);
   document.getElementById('deleteButton').addEventListener('click', deleteEvent);
   document.getElementById('closeButton').addEventListener('click', closeModal);
   document.getElementById('btnAddTask').addEventListener('click', addTask);

@@ -1,300 +1,341 @@
-let nav = 0;
-let clicked = null;
-let tasks = localStorage.getItem('tasks') ? JSON.parse(localStorage.getItem('tasks')) : [];
-let daySelected = document.createElement('div');
-let selectedDayString;
-let justStarted = true;
-let dateIndex;
-let daySelectedTasks = null;
-let selectedTask = null;
-let selectedTaskIndex;
-let isPomodoro = false;
+let calendario;
 
-let pomodoro;
+class Calendario {
+  constructor() {
+    this.nav = 0;
+    this.clicked = null;
+    this.tasks = localStorage.getItem('tasks') ? JSON.parse(localStorage.getItem('tasks')) : [];
+    this.daySelected = document.createElement('div');
+    this.selectedDayString;
+    this.justStarted = true;
+    this.dateIndex;
+    this.daySelectedTasks = null;
+    this.selectedTask = null;
+    this.selectedTaskIndex;
+    this.isPomodoro = false;
+    this.pomodoro;
 
-const calendar = document.getElementById('calendar');
-const newTaskModal = document.getElementById('newTaskModal');
-const deleteTaskModal = document.getElementById('deleteTaskModal');
-const backDrop = document.getElementById('modalBackDrop');
-const taskTitleInput = document.getElementById('taskTitleInput');
-const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const tasklist = document.getElementById('tasklist');
-const pomodoroModal = document.getElementById('pomodoroModal');
+    this.calendar = document.getElementById('calendar');
+    this.newTaskModal = document.getElementById('newTaskModal');
+    this.deleteTaskModal = document.getElementById('deleteTaskModal');
+    this.backDrop = document.getElementById('modalBackDrop');
+    this.taskTitleInput = document.getElementById('taskTitleInput');
+    this.weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    this.tasklist = document.getElementById('tasklist');
+    this.pomodoroModal = document.getElementById('pomodoroModal');
+    this.taskEditTitleInput = document.getElementById('taskEditTitleInput');
 
-function verifyExistentTasks() {
-  for (let i = 0; i < tasks.length; i++) {
-    const date = tasks[i].date;
-    if (date == selectedDayString) {
-      dateIndex = i;
-      return true;
+    console.log(tasklist);
+  }
+
+  verifyExistentTasks() {
+    for (let i = 0; i < calendario.tasks.length; i++) {
+      const date = calendario.tasks[i].date;
+      if (date == calendario.selectedDayString) {
+        calendario.dateIndex = i;
+        return true;
+      }
     }
   }
-}
 
-function refreshSelectedDay(daySquare) {
-  daySelected.style.backgroundColor = "white";
-  daySelected = daySquare;
-  daySelected.style.backgroundColor = "red";
-}
+  refreshSelectedDay(daySquare) {
+    calendario.daySelected.style.backgroundColor = "white";
+    calendario.daySelected = daySquare;
+    calendario.daySelected.style.backgroundColor = "red";
+  }
 
-function refreshTasks() {
-  try {
-    tasklist.replaceChildren();
-    for (let i = 0; i < daySelectedTasks.tasksNodes.length; i++) {
-      const task = daySelectedTasks.tasksNodes[i];
-      // console.log(task);
-      const taskDiv = document.createElement('div');
-      taskDiv.classList.add('taskDiv');
-      
-      const taskTitle = document.createElement('div');
-      taskTitle.classList.add('taskTitle');
-      taskTitle.innerText = task.title;
-      // console.log(task.title);
+  refreshTasks() {
+    try {
+      console.log('Tasklist: ' + calendario.tasklist)
+      calendario.tasklist.replaceChildren();
+      for (let i = 0; i < calendario.daySelectedTasks.tasksNodes.length; i++) {
+        const task = calendario.daySelectedTasks.tasksNodes[i];
+        // console.log(task);
+        const taskDiv = document.createElement('div');
+        taskDiv.classList.add('taskDiv');
 
-      taskDiv.appendChild(taskTitle);
-      
-      const iconPomodoro = document.createElement('img')
+        const taskTitle = document.createElement('div');
+        taskTitle.classList.add('taskTitle');
+        taskTitle.innerText = task.title;
+        // console.log(task.title);
 
-      
-      taskTitle.addEventListener('click', () => {
-        document.getElementById('taskEditTitleInput').value = task.title;
-        selectedTask = task;
-        selectedTaskIndex = i;
-        deleteTaskModal.style.display = 'block';
-      })
+        taskDiv.appendChild(taskTitle);
 
-      if (task.done) {
-        iconPomodoro.src = './img/iconRedPomodoro.png';
-      }
-      iconPomodoro.src = './img/iconGreenPomodoro.png';
+        const iconPomodoro = document.createElement('img')
 
-      iconPomodoro.addEventListener('click', () => {
-        console.log('Cliquei no Pomodoro');
-        pomodoroModal.style.display = 'block';
-        isPomodoro = true;
-        if (pomodoro == null) {
-          pomodoro = new Pomodoro(task.title, daySelectedTasks.date);
-          console.log('Primeira instância Pomodoro')
-          
+
+        taskTitle.addEventListener('click', () => {
+          document.getElementById('taskEditTitleInput').value = task.title;
+          calendario.selectedTask = task;
+          calendario.selectedTaskIndex = i;
+          calendario.deleteTaskModal.style.display = 'block';
+        })
+
+        if (task.done) {
+          iconPomodoro.src = './img/iconRedPomodoro.png';
         }
         else {
-          if (pomodoro.title != task.title || pomodoro.date != daySelectedTasks.date) {
-            pomodoro = new Pomodoro(task.title, daySelectedTasks.date)
-            console.log('Nova instância Pomodoro')
+          iconPomodoro.src = './img/iconGreenPomodoro.png';
+        }
+
+        this.verifyExistentTasks();
+
+        iconPomodoro.addEventListener('click', () => {
+          console.log('Cliquei no Pomodoro');
+          calendario.pomodoroModal.style.display = 'block';
+          document.getElementById('pomodoroTaskTitle').innerText = task.title;
+          calendario.isPomodoro = true;
+          if (calendario.pomodoro == null) {
+            calendario.pomodoro = new Pomodoro(task, calendario.daySelectedTasks.date, calendario.tasks, calendario.dateIndex, i, calendario);
+            console.log('Primeira instância Pomodoro' + this.dateIndex)
+            
+          }
+          else {
+            if (calendario.pomodoro.title != task.title || calendario.pomodoro.date != calendario.daySelectedTasks.date) {
+              calendario.pomodoro.resetPomodoro(task, calendario.daySelectedTasks.date, calendario.tasks, calendario.dateIndex, i, calendario.pomodoro);
+              console.log('Nova instância Pomodoro')
+            }
+          }
+
+        })
+
+        taskDiv.appendChild(iconPomodoro);
+
+        calendario.tasklist.appendChild(taskDiv);
+      }
+
+      if (!calendario.isPomodoro) {
+        console.log('Excluir Instancia')
+      }
+
+      console.log('Refresh tasks')
+
+    } catch (error) {
+      console.log('ERRO: ' + error);
+      calendario.tasklist.replaceChildren();
+    }
+
+  }
+
+  load() {
+    const dt = new Date();
+
+    if (calendario.nav !== 0) {
+      dt.setMonth(new Date().getMonth() + calendario.nav);
+    }
+
+    const day = dt.getDate();
+    const month = dt.getMonth();
+    const year = dt.getFullYear();
+
+    const firstDayOfMonth = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    });
+    const paddingDays = calendario.weekdays.indexOf(dateString.split(', ')[0]);
+
+    document.getElementById('monthDisplay').innerText =
+      `${dt.toLocaleDateString('en-us', { month: 'long' })} ${year}`;
+
+    calendario.calendar.innerHTML = '';
+
+    // Criando o calendário
+    for (let i = 1; i <= paddingDays + daysInMonth; i++) {
+      const daySquare = document.createElement('div');
+      daySquare.classList.add('day');
+
+      const dayString = `${month + 1}/${i - paddingDays}/${year}`;
+
+      if (i > paddingDays) {
+
+        daySquare.innerText = i - paddingDays;
+        const tasksForDay = calendario.tasks.find(e => e.date === dayString);
+
+        // Data atual
+        if (i - paddingDays === day && calendario.nav === 0) {
+          // daySquare.id = 'currentDay';
+
+          // Para a aplicação sempre iniciar com a data atual selecionada
+          if (calendario.justStarted) {
+            calendario.daySelected = daySquare;
+            calendario.daySelected.style.backgroundColor = "red";
+            calendario.selectedDayString = dayString;
+            calendario.daySelectedTasks = tasksForDay;
+            calendario.refreshTasks();
+            calendario.verifyExistentTasks();
           }
         }
-        document.getElementById('pomodoroTaskTitle').innerText = task.title;
-        
-      })
 
-      taskDiv.appendChild(iconPomodoro);
-
-      tasklist.appendChild(taskDiv);
-    }
-
-    if (!isPomodoro) {
-      console.log('Excluir Instancia')
-    }
-
-    console.log('Refresh tasks')
-
-  } catch (error) {
-    tasklist.replaceChildren();
-    console.log(error);
-  }
-
-}
-
-function load() {
-  const dt = new Date();
-
-  if (nav !== 0) {
-    dt.setMonth(new Date().getMonth() + nav);
-  }
-
-  const day = dt.getDate();
-  const month = dt.getMonth();
-  const year = dt.getFullYear();
-
-  const firstDayOfMonth = new Date(year, month, 1);
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  
-  const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-  });
-  const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
-
-  document.getElementById('monthDisplay').innerText = 
-    `${dt.toLocaleDateString('en-us', { month: 'long' })} ${year}`;
-
-  calendar.innerHTML = '';
-
-  // Criando o calendário
-  for(let i = 1; i <= paddingDays + daysInMonth; i++) {
-    const daySquare = document.createElement('div');
-    daySquare.classList.add('day');
-
-    const dayString = `${month + 1}/${i - paddingDays}/${year}`;
-
-    if (i > paddingDays) {
-      
-      daySquare.innerText = i - paddingDays;
-      const tasksForDay = tasks.find(e => e.date === dayString);
-
-      // Data atual
-      if (i - paddingDays === day && nav === 0) {
-        // daySquare.id = 'currentDay';
-        
-        // Para a aplicação sempre iniciar com a data atual selecionada
-        if (justStarted) {
-          daySelected = daySquare;
-          daySelected.style.backgroundColor = "red";
-          selectedDayString = dayString;
-          daySelectedTasks = tasksForDay;
-          refreshTasks();  
+        // Indicação visual de data selecionada
+        if (dayString == calendario.selectedDayString) {
+          calendario.refreshSelectedDay(daySquare);
         }
-      }
 
-      // Indicação visual de data selecionada
-      if (dayString == selectedDayString) {
-        refreshSelectedDay(daySquare);
-      }
-
-      // Indicação visual de datas com tarefas anexadas
-      if(tasksForDay) {
-        const taskDiv = document.createElement('div');
-        taskDiv.classList.add('taskIndication');
-        daySquare.appendChild(taskDiv);
-      }
-
-      daySquare.addEventListener('click', () => {
-        justStarted = false;
-        selectedDayString = dayString;
-        refreshSelectedDay(daySquare);
-        daySelectedTasks = tasksForDay;
-        refreshTasks();      
-      })
-
-    } else {
-      daySquare.classList.add('padding');
-    }
-
-    calendar.appendChild(daySquare);    
-  }
-  refreshTasks();
-}
-
-function closeModal() {
-  taskTitleInput.classList.remove('error');
-  newTaskModal.style.display = 'none';
-  deleteTaskModal.style.display = 'none';
-  backDrop.style.display = 'none';
-  taskTitleInput.value = '';
-  clicked = null;
-  load();
-}
-
-function createTask() {
-  if (taskTitleInput.value) {
-    taskTitleInput.classList.remove('error');
-
-    // Verifica se há alguma task cadastrada na data selecionada
-    if (verifyExistentTasks()) {
-      tasks[dateIndex].tasksNodes.push(
-        {
-          title: taskTitleInput.value,
-          done: false
+        // Indicação visual de datas com tarefas anexadas
+        if (tasksForDay) {
+          const taskDiv = document.createElement('div');
+          taskDiv.classList.add('taskIndication');
+          daySquare.appendChild(taskDiv);
         }
-      );
+
+        daySquare.addEventListener('click', () => {
+          calendario.justStarted = false;
+          calendario.selectedDayString = dayString;
+          calendario.refreshSelectedDay(daySquare);
+          calendario.daySelectedTasks = tasksForDay;
+          calendario.refreshTasks();
+        })
+
+      } else {
+        daySquare.classList.add('padding');
+      }
+
+      calendario.calendar.appendChild(daySquare);
     }
-    else {
-      tasks.push({
-        date: selectedDayString,
-        tasksNodes: [
+    calendario.refreshTasks();
+  }
+
+
+  closeModal() {
+    calendario.taskTitleInput.classList.remove('error');
+    calendario.newTaskModal.style.display = 'none';
+    calendario.deleteTaskModal.style.display = 'none';
+    calendario.backDrop.style.display = 'none';
+    calendario.taskTitleInput.value = '';
+    calendario.clicked = null;
+    calendario.load();
+  }
+
+
+
+  createTask() {
+    if (calendario.taskTitleInput.value) {
+      calendario.taskTitleInput.classList.remove('error');
+
+      // Verifica se há alguma task cadastrada na data selecionada
+      if (calendario.verifyExistentTasks()) {
+        calendario.tasks[calendario.dateIndex].tasksNodes.push(
           {
-            title: taskTitleInput.value,
+            title: calendario.taskTitleInput.value,
             done: false
           }
-        ]
+        );
+      }
+      else {
+        calendario.tasks.push({
+          date: calendario.selectedDayString,
+          tasksNodes: [
+            {
+              title: calendario.taskTitleInput.value,
+              done: false
+            }
+          ]
         }
-      );
+        );
+      }
+
+      localStorage.setItem('tasks', JSON.stringify(calendario.tasks));
+
+      calendario.daySelectedTasks = calendario.tasks.find(e => e.date === calendario.selectedDayString);
+      calendario.refreshTasks();
+      calendario.closeModal();
+    } else {
+      calendario.taskTitleInput.classList.add('error');
+    }
+  }
+
+  saveTask() {
+    if (calendario.taskEditTitleInput.value) {
+      calendario.taskEditTitleInput.classList.remove('error');
+
+      calendario.daySelectedTasks.tasksNodes[calendario.selectedTaskIndex].title = calendario.taskEditTitleInput.value;
+
+      localStorage.setItem('tasks', JSON.stringify(calendario.tasks));
+
+      calendario.refreshTasks();
+      calendario.closeModal();
+
+    } else {
+      calendario.taskTitleInput.classList.add('error');
+    }
+  }
+
+  // TODO
+  deleteTask() {
+    calendario.daySelectedTasks = calendario.tasks.find(e => e.date === calendario.selectedDayString);
+
+    console.log('DELETE');
+    console.log(calendario.daySelectedTasks);
+
+    calendario.daySelectedTasks.tasksNodes = calendario.daySelectedTasks.tasksNodes.filter(e => e.title != calendario.selectedTask.title);
+
+    console.log(calendario.daySelectedTasks);
+
+    if (calendario.daySelectedTasks.tasksNodes.length == 0) {
+      calendario.tasks = calendario.tasks.filter(e => e.date !== calendario.selectedDayString);
     }
 
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    
-    daySelectedTasks = tasks.find(e => e.date === selectedDayString);
-    refreshTasks();
-    closeModal();
-  } else {
-    taskTitleInput.classList.add('error');
-  }
-}
+    localStorage.setItem('tasks', JSON.stringify(calendario.tasks));
 
-function saveTask() {
-  if (taskEditTitleInput.value) {
-    taskEditTitleInput.classList.remove('error');
-
-    daySelectedTasks.tasksNodes[selectedTaskIndex].title = taskEditTitleInput.value;
-
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-
-    refreshTasks();
-    closeModal();
-
-  } else {
-    taskTitleInput.classList.add('error');
-  }
-}
-
-// TODO
-function deleteTask() {
-  daySelectedTasks = tasks.find(e => e.date === selectedDayString);
-  
-  console.log('DELETE');
-  console.log(daySelectedTasks);
-
-  daySelectedTasks.tasksNodes = daySelectedTasks.tasksNodes.filter(e => e.title != selectedTask.title);
-
-  console.log(daySelectedTasks);
-  
-  if (daySelectedTasks.tasksNodes.length == 0) {
-    tasks = tasks.filter(e => e.date !== selectedDayString);
+    calendario.refreshTasks();
+    calendario.closeModal();
   }
 
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+  addTask() {
+    calendario.newTaskModal.style.display = 'block';
   
-  refreshTasks();
-  closeModal();
-}
+    calendario.backDrop.style.display = 'block';
+  }
 
-function addTask() {
-  newTaskModal.style.display = 'block';
-
-  backDrop.style.display = 'block';
-}
-
-function initButtons() {
-  document.getElementById('nextButton').addEventListener('click', () => {
-    nav++;
-    load();
-  });
-
-  document.getElementById('backButton').addEventListener('click', () => {
-    nav--;
-    load();
-  });
-
-  document.getElementById('addButton').addEventListener('click', createTask);
-  document.getElementById('cancelButton').addEventListener('click', closeModal);
-  document.getElementById('saveButton').addEventListener('click', saveTask);
-  document.getElementById('deleteButton').addEventListener('click', deleteTask);
-  document.getElementById('closeButton').addEventListener('click', closeModal);
-  document.getElementById('btnAddTask').addEventListener('click', addTask);
+  initButtons() {
+    document.getElementById('nextButton').addEventListener('click', () => {
+      calendario.nav++;
+      calendario.load();
+    });
   
-}
+    document.getElementById('backButton').addEventListener('click', () => {
+      calendario.nav--;
+      calendario.load();
+    });
+  
+    document.getElementById('addButton').addEventListener('click', calendario.createTask);
+    document.getElementById('cancelButton').addEventListener('click', calendario.closeModal);
+    document.getElementById('saveButton').addEventListener('click', calendario.saveTask);
+    document.getElementById('deleteButton').addEventListener('click', calendario.deleteTask);
+    document.getElementById('closeButton').addEventListener('click', calendario.closeModal);
+    document.getElementById('btnAddTask').addEventListener('click', calendario.addTask);
+  
+  }
 
-initButtons();
-load();
+
+
+
+
+} // class Calendario
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+calendario = new Calendario();
+
+calendario.initButtons();
+calendario.load();

@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    
     <div id="calendarModule">
       <div id="header">
         <div id="monthDisplay"></div>
@@ -58,8 +57,24 @@
       <button id="closeButton">Close</button>
     </div>
 
+    <div id="pomodoroModal">
+      <img id="returnButton" src="img/imgLargeBack.png"></img>
+      <p id="pomodoroTaskTitle"></p>
+      <img src="img/imgPomodoroTimer.png">
+
+      <p id="demo"></p>
+      <p id="breakLabel"></p>
+
+      <button id="btnStartTimer">Start</button>
+      <button id="btnPauseTimer">Pause</button>
+
+    </div>
+    
     <div id="modalBackDrop"></div>
 
-    <script src="./script.js"></script>
+
+    
+    <script type="module" src="./src/calendario.js"></script>
+    <script src="./src/pomodoro.js"></script>
   </body>
 </html>

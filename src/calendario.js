@@ -8,6 +8,9 @@ let dateIndex;
 let daySelectedTasks = null;
 let selectedTask = null;
 let selectedTaskIndex;
+let isPomodoro = false;
+
+let pomodoro;
 
 const calendar = document.getElementById('calendar');
 const newTaskModal = document.getElementById('newTaskModal');
@@ -16,6 +19,7 @@ const backDrop = document.getElementById('modalBackDrop');
 const taskTitleInput = document.getElementById('taskTitleInput');
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const tasklist = document.getElementById('tasklist');
+const pomodoroModal = document.getElementById('pomodoroModal');
 
 function verifyExistentTasks() {
   for (let i = 0; i < tasks.length; i++) {
@@ -51,17 +55,7 @@ function refreshTasks() {
       
       const iconPomodoro = document.createElement('img')
 
-      if (task.done) {
-        iconPomodoro.src = './img/iconRedPomodoro.png';
-      }
-      iconPomodoro.src = './img/iconGreenPomodoro.png';
-
-      iconPomodoro.addEventListener('click', () => {
-        console.log('Cliquei no Pomodoro');
-      })
-
-      taskDiv.appendChild(iconPomodoro);
-
+      
       taskTitle.addEventListener('click', () => {
         document.getElementById('taskEditTitleInput').value = task.title;
         selectedTask = task;
@@ -69,8 +63,40 @@ function refreshTasks() {
         deleteTaskModal.style.display = 'block';
       })
 
+      if (task.done) {
+        iconPomodoro.src = './img/iconRedPomodoro.png';
+      }
+      iconPomodoro.src = './img/iconGreenPomodoro.png';
+
+      iconPomodoro.addEventListener('click', () => {
+        console.log('Cliquei no Pomodoro');
+        pomodoroModal.style.display = 'block';
+        isPomodoro = true;
+        if (pomodoro == null) {
+          pomodoro = new Pomodoro(task.title, daySelectedTasks.date);
+          console.log('Primeira instância Pomodoro')
+          
+        }
+        else {
+          if (pomodoro.title != task.title || pomodoro.date != daySelectedTasks.date) {
+            pomodoro = new Pomodoro(task.title, daySelectedTasks.date)
+            console.log('Nova instância Pomodoro')
+          }
+        }
+        document.getElementById('pomodoroTaskTitle').innerText = task.title;
+        
+      })
+
+      taskDiv.appendChild(iconPomodoro);
+
       tasklist.appendChild(taskDiv);
     }
+
+    if (!isPomodoro) {
+      console.log('Excluir Instancia')
+    }
+
+    console.log('Refresh tasks')
 
   } catch (error) {
     tasklist.replaceChildren();
@@ -158,6 +184,7 @@ function load() {
 
     calendar.appendChild(daySquare);    
   }
+  refreshTasks();
 }
 
 function closeModal() {
@@ -266,6 +293,7 @@ function initButtons() {
   document.getElementById('deleteButton').addEventListener('click', deleteTask);
   document.getElementById('closeButton').addEventListener('click', closeModal);
   document.getElementById('btnAddTask').addEventListener('click', addTask);
+  
 }
 
 initButtons();

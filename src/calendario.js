@@ -40,9 +40,9 @@ class Calendario {
   }
 
   refreshSelectedDay(daySquare) {
-    calendario.daySelected.style.backgroundColor = "white";
+    calendario.daySelected.removeAttribute('id');
     calendario.daySelected = daySquare;
-    calendario.daySelected.style.backgroundColor = "red";
+    calendario.daySelected.id = 'selectedDay';
   }
 
   refreshTasks() {
@@ -133,7 +133,7 @@ class Calendario {
     console.log(paddingDays);
 
     document.getElementById('monthDisplay').innerText =
-      `${dt.toLocaleDateString(calendario.configs.lang, { month: 'long' })} ${year}`;
+      `${dt.toLocaleDateString(calendario.configs.lang, { month: 'long' })}`;
 
     calendario.calendar.innerHTML = '';
 
@@ -156,7 +156,7 @@ class Calendario {
           // Para a aplicação sempre iniciar com a data atual selecionada
           if (calendario.justStarted) {
             calendario.daySelected = daySquare;
-            calendario.daySelected.style.backgroundColor = "red";
+            // calendario.daySelected.style.backgroundColor = "red";
             calendario.selectedDayString = dayString;
             calendario.daySelectedTasks = tasksForDay;
             calendario.refreshTasks();
@@ -171,9 +171,11 @@ class Calendario {
 
         // Indicação visual de datas com tarefas anexadas
         if (tasksForDay) {
-          const taskDiv = document.createElement('div');
+          /* const taskDiv = document.createElement('div');
           taskDiv.classList.add('taskIndication');
-          daySquare.appendChild(taskDiv);
+          daySquare.appendChild(taskDiv); */
+
+          daySquare.classList.add('taskIndication');
         }
 
         daySquare.addEventListener('click', () => {

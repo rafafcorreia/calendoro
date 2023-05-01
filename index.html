@@ -7,41 +7,62 @@
   <title>Calendoro</title>
 
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reset.css">
 </head>
 
 <body>
-  <header>
-    <img src="./img/Logo.png" width="240" height="40" align="left" id="imgLogo">
-    <img src="./img/iconConfig.png" id="iconConfig">
+   <!-- <li class="licountry">
+      <div id="google_translate_element" class="boxTradutor"></div>
+      <ul class="nav-translate">
+          <li><a href="javascript:trocarIdioma('en')" title="Inglês"><img class="img-responsive" src="img/Flag_of_the_United_Kingdom_(3-5).png" alt="Inglês"></a></li>
+          <li><a href="javascript:trocarIdioma('pt')" title="Português"><img class="img-responsive" src="img/brazil-flag.png" alt="Português"></a></li>
+          <li><a href="javascript:trocarIdioma('es')" title="Espanhol"><img class="img-responsive" src="img/ES-Spain-Flag-icon.png" alt="Espanhol"></a></li>
+      </ul>
+  </li> -->
+  <header class="container">
+    <div class="row-1">
+      <div class="col-50">
+        <img class="img-responsive" src="./img/Logo.png" id="imgLogo">
+      </div>
+      <div class="col-50 text-right ajuste-img">
+        <img style="margin-right: 0;" class="img-responsive" src="./img/iconConfig.png" id="iconConfig">
+      </div>
+    </div>
   </header>
-  <div id="bodyContainer">
-    <div id="calendarModule">
-      <div id="header">
-        <img id="backButton" src="./img/leftArrow.png">
-        <div id="monthDisplay"></div>
-        <img id="nextButton" src="./img/rightArrow.png">
+  <div class="container">
+    <div class="row-1">
+      <div class="col-70 col-mob-100">
+        <div id="calendarModule">
+          <div class="header" id="header">
+            <img id="backButton" src="./img/leftArrow.png">
+            <div id="monthDisplay"></div>
+            <img id="nextButton" src="./img/rightArrow.png">
+          </div>
+          <div id="weekdays">
+            <div>Sunday</div>
+            <div>Monday</div>
+            <div>Tuesday</div>
+            <div>Wednesday</div>
+            <div>Thursday</div>
+            <div>Friday</div>
+            <div>Saturday</div>
+          </div>
+          <div id="calendar"></div>
+        </div>
       </div>
 
-      <div id="weekdays">
-        <div>Sunday</div>
-        <div>Monday</div>
-        <div>Tuesday</div>
-        <div>Wednesday</div>
-        <div>Thursday</div>
-        <div>Friday</div>
-        <div>Saturday</div>
+      <!-- <div id="linha"></div> -->
+
+      <div class="col-30 col-mob-100">
+        <div class="header">
+          Atividades
+        </div>
+        <div id="taskListContainer">
+          <div id="tasklist"></div>
+          <img id="btnAddTask" src="img/imgBtnAddTask.png">
+        </div>
       </div>
-
-      <div id="calendar"></div>
     </div>
-
-    <div id="linha"></div>
-
-    <div id="taskListContainer">
-      <div id="tasklist"></div>
-      <img id="btnAddTask" src="img/imgBtnAddTask.png">
-    </div>
-
     <div id="newTaskModal">
       <h2>New task</h2>
       <img id="cancelButton" src="img/imgSmallBack.png">
@@ -68,16 +89,16 @@
         <div class="configRows">
           <div class="configColumn">
             <p>Español</p>
-            <img src="./img/ES-Spain-Flag-icon.png" id="es">
+            <img class="img-responsive" src="./img/ES-Spain-Flag-icon.png" id="es">
           </div>
           <div class="configColumn">
             <p>English</p>
             <img src="./img/Flag_of_the_United_Kingdom_(3-5).png"
-              style="max-width: 70px; max-height: 42px; margin-top: -5px;" id="en">
+              class="img-responsive" id="en">
           </div>
           <div class="configColumn">
             <p>Português</p>
-            <img src="./img/brazil-flag.png" style="max-width: 70px; max-height: 42px; margin-top: -5px;" id="pt">
+            <img src="./img/brazil-flag.png" class="img-responsive" id="pt">
           </div>
         </div>
         <p class="configHeader" id="timerHeader">Timer</p>
@@ -95,30 +116,71 @@
         <input type="submit" id="btnSubmitConfig">
       </form>
     </div>
+  </div>
 
-    <div id="pomodoroModal">
-      <p id="pomodoroTaskTitle"></p>
-      <img src="./img/imgPomodoroTimer.png" width="230" height="200" />
-      <br /> <br /> <br />
-      <div id="cronometro"></div>
-      <br /> <br />
-      <button id="botao">►</button>
-      <p id="breakLabel">Intervalo</p>
-      <br /> <br /> <br />
-      <button id="botao-concluir"><b>Concluir tarefa</b></button>
-      <br /> <br /> <br /> <br />
-      <img src="./img/imgSmallBack.png" width="75" height="75" align="left" id="btnReturn"/>
-
-
+  <div id="pomodoroModal">
+    <div class="container">
+      <div class="row-1">
+        <div class="col-100">
+          <div class="box-title-pomodoro">
+            <p id="pomodoroTaskTitle"></p>
+          </div>
+        </div>
+        <div class="col-100">
+          <div class="box-img-pomodoro">
+            <img class="img-responsive" src="./img/imgPomodoroTimer.png" />
+          </div>
+        </div>
+        <div class="col-100">
+          <div id="cronometro"></div>
+        </div>
+        <div class="col-100">
+          <button style="margin: 15px auto" id="botao">►</button>
+        </div>
+        <div class="col-100">
+          <p id="breakLabel">Intervalo</p>
+        </div>
+        <div class="col-100">
+          <button id="botao-concluir"><b>Concluir tarefa</b></button>
+        </div>
+        <img class="img-responsive" src="./img/imgSmallBack.png" id="btnReturn" />
+      </div>
     </div>
-
     <div id="modalBackDrop"></div>
+   
   </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
   <script type="module" src="./src/calendario.js"></script>
   <script src="./src/pomodoro.js"></script>
   <script src="./src/config.js"></script>
+  <!-- <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script>
+    var comboGoogleTradutor = null; //Varialvel global
+    function trocarIdioma(sigla) {
+      if (comboGoogleTradutor) {
+        comboGoogleTradutor.value = sigla;
+        changeEvent(comboGoogleTradutor); //Dispara a troca
+      }
+    }
+    function changeEvent(el) {
+      if (el.fireEvent) {
+        el.fireEvent('onchange');
+      } else {
+        var evObj = document.createEvent("HTMLEvents");
+        evObj.initEvent("change", false, true);
+        el.dispatchEvent(evObj);
+      }
+    }
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'pt',
+        includedLanguages: 'pt,en,es',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+      }, 'google_translate_element');
+      comboGoogleTradutor = document.getElementById("google_translate_element").querySelector(".goog-te-combo");
+    }
+  </script> -->
 </body>
 
 </html>

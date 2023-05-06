@@ -1,14 +1,64 @@
-body {
+/* Padrão */
+
+.container {
+  margin: 0 auto;
+  padding: 15px 15px;
+}
+
+.row-1 {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 15px;
+  width: 100%;
+}
+
+.col-30 {
+  width: 30%;
+}
+
+.col-50 {
+  width: 50%;
+}
+
+.col-70 {
+  width: 70%;
+}
+
+.col-100 {
+  width: 100%;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.img-responsive {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Fim Padrão */
+
+.box-title-pomodoro p {
+  margin: 15px 0;
+  font-size: 2.3rem;
+  color: #333;
+}
+
+body {
+  position: relative;
+  font-family: Arial;
+  /* display: flex;
   flex-flow: column;
-  margin: 5px;
+  margin: 5px; */
 }
 
 #pomodoroTaskTitle {
   font-size: 32px;
   font-weight: bold;
-  margin-top: -50px;
-  
+
 }
 
 #selectedDay {
@@ -36,6 +86,7 @@ header {
   justify-content: center;
   background-color: #FFFCFF;
 }
+
 button {
   width: 75px;
   cursor: pointer;
@@ -58,42 +109,53 @@ button {
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
-  width: 40%;
-  margin: -10px;
+  width: 100%;
 }
 
 #tasklist {
   flex-flow: column wrap;
   width: 100%;
-  height: 90%;
+  height: 630px;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+  box-shadow: 0 0 6px #333;
 }
 
 #btnAddTask {
-  
   width: 70px;
   height: 70px;
-
+  cursor: pointer;
+  transition: .6s all ease;
 }
 
-#languageHeader, #timerHeader {
+#btnAddTask:hover{
+  transform: scale(1.1);
+  transition: .6s all ease;
+}
+
+#languageHeader,
+#timerHeader {
   color: crimson;
   font-weight: bold;
 }
 
-#header {
-  padding: 10px;
+#header button {
+  background-color: #92a1d1;
+}
+
+#calendarModule {
+  max-width: 770px;
+}
+
+.header {
   color: black;
   font-size: 26px;
   font-family: sans-serif;
   font-weight: bold;
+  padding: 10px;
+
   display: flex;
   justify-content: center;
-}
-#header button {
-  background-color:#92a1d1;
-}
-#calendarModule {
-  max-width: 770px;
 }
 
 #weekdays {
@@ -103,16 +165,19 @@ button {
   text-align: center;
   font-weight: bold;
 }
+
 #weekdays div {
   width: 100px;
   padding: 10px;
 }
+
 #calendar {
   width: 100%;
   margin: auto;
   display: flex;
   flex-wrap: wrap;
 }
+
 .day {
   width: 100px;
   padding: 10px;
@@ -129,17 +194,19 @@ button {
   padding: 40px;
   font-weight: 500;
 }
+
 .day:hover {
   background-color: #e8faed;
 }
 
-.day + #currentDay {
-  background-color:#e8f4fa;
+.day+#currentDay {
+  background-color: #e8f4fa;
 }
 
-.day + #selected {
+.day+#selected {
   background-color: blueviolet;
 }
+
 .taskDiv {
   display: flex;
   justify-content: space-between;
@@ -155,10 +222,41 @@ button {
   margin: 10px;
 }
 
+.taskDiv img {
+  transform: scale(1);
+  cursor: pointer;
+  transition: .6s all ease;
+}
+
+.taskDiv img:hover {
+  transform: scale(1.1);
+  transition: .6s all ease;
+}
+
 .taskTitle {
   color: black;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 15px;
+  cursor: pointer;
+  position: relative;
+}
+
+.taskTitle::after {
+  content: "Editar";
+  position: relative;
+  font-size: 8px;
+  top: -10px;
+  left: 5px;
+  border: 1px solid #000;
+  border-radius: 15px;
+  padding: 3px 7px;
+  background: #cbfdcb;
+  transition: .6s all ease;
+}
+
+.taskTitle:hover::after {
+  font-size: 9px;
+  transition: .6s all ease;
 }
 
 .taskIndication {
@@ -170,7 +268,9 @@ button {
   background-color: #FFFCFF !important;
   box-shadow: none !important;
 }
-#newTaskModal, #deleteTaskModal {
+
+#newTaskModal,
+#deleteTaskModal {
   display: none;
   z-index: 20;
   padding: 25px;
@@ -178,10 +278,12 @@ button {
   box-shadow: 0px 0px 3px black;
   border-radius: 5px;
   border: 2px solid black;
-  width: 500px;
-  top: 300px;
-  left: calc(50% - 275px);
-  position: absolute;
+  max-width: 500px;
+  width: 79%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: fixed;
   font-family: sans-serif;
   height: 150px;
 }
@@ -189,8 +291,17 @@ button {
 
 #btnReturn {
   position: absolute;
-  left: 50px;
-  margin-top: -80px;
+  left: 13%;
+  top: 86%;
+  transform: translate(-50%, -50%);
+  transition: .6s all ease;
+  width: 50px;
+}
+
+#btnReturn:hover {
+  cursor: pointer;
+  transition: .6s all ease;
+  width: 65px;
 }
 
 #pomodoroModal {
@@ -201,12 +312,16 @@ button {
   background-color: white;
   border-radius: 5px;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   text-align: center;
-  margin-left: 50px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
 }
 
-#backButton, #nextButton {
+#backButton,
+#nextButton {
   width: 26px;
   height: 24px;
   margin-left: 20px;
@@ -216,13 +331,12 @@ button {
 #configModal {
   display: none;
   position: absolute;
-  right: 40px;
+  right: 44px;
   top: 70px;
   margin-top: 10px;
-  margin-right: 30px;
-  z-index: 9999;
-  background-color:gainsboro;
-  width: 300px;
+  z-index: 20;
+  background-color: gainsboro;
+  max-width: 400px;
   height: 400px;
   border-radius: 10px;
   border: 3px solid black;
@@ -239,32 +353,36 @@ button {
 #formConfig {
   display: flex;
   flex-flow: column;
+  gap: 10px;
 }
 
 .configRows {
   display: flex;
   flex-flow: row;
   justify-content: space-between;
-  margin-top: -20px;
 }
 
 .configColumn {
   display: flex;
   flex-flow: column;
   align-items: center;
+  gap: 13px;
+  margin: 17px 5px;
 }
 
-.configColumn p{
+.configColumn p {
   font-weight: bold;
 }
 
-.configColumn input{
+.configColumn input {
   border-radius: 20px;
   width: 60px;
   height: 20px;
+  padding: 5px;
 }
 
-#btnResetConfig, #btnSubmitConfig {
+#btnResetConfig,
+#btnSubmitConfig {
   margin-top: 10px;
   border-radius: 20px;
   width: 200px;
@@ -273,31 +391,40 @@ button {
   background-color: rgb(255, 127, 127);
   font-weight: bold;
   font-size: 18px;
+  cursor: pointer;
 }
 
-#taskTitleInput, #taskEditTitleInput{
+#taskTitleInput,
+#taskEditTitleInput {
   padding: 10px;
-  width: 100%;
+  width: 85%;
   box-sizing: border-box;
   margin-bottom: 25px;
   border-radius: 5px;
   outline: none;
   border: 2px solid black;
 }
+
 #taskTitleInput.error {
   border: 2px solid red;
 }
 
-#cancelButton, #closeButton {
+#cancelButton,
+#closeButton {
   position: absolute;
   right: 10px;
   top: 20px;
 }
-#btnStartTimer, #btnPauseTimer, #btnFinishTask {
+
+#btnStartTimer,
+#btnPauseTimer,
+#btnFinishTask {
   background-color: #92a1d1;
 }
 
-#addButton, #saveButton, #deleteButton {
+#addButton,
+#saveButton,
+#deleteButton {
   background-color: rgb(255, 127, 127);
   color: black;
   font-weight: bold;
@@ -315,22 +442,34 @@ button {
 #taskText {
   font-size: 14px;
 }
+
 #modalBackDrop {
   display: none;
   top: 0px;
   left: 0px;
-  z-index: 10;
+  z-index: 30;
   width: 100vw;
   height: 100vh;
   position: absolute;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
-body {
-  font-family: Arial;
+.box-img-pomodoro img {
+  padding: 15px 0;
 }
 
-#cronometro, #breakLabel {
+.ajuste-img img {
+  transform: rotate(0);
+  transition: .6s all ease;
+  cursor: pointer;
+}
+.ajuste-img img:hover {
+  transform: rotate(350deg);
+  transition: .6s all ease;
+}
+
+#cronometro,
+#breakLabel {
   font-family: Arial;
   font-size: 75px;
   text-align: center;
@@ -364,12 +503,51 @@ body {
 }
 
 #imgLogo {
-  min-height: 65px;
-  min-width: 280px;
+  width: 294px;
+  margin-left: 0;
 }
 
 .configColumn img {
-  margin-top: -20px;
   width: 70px;
-  height: 70px;
+  cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+  .col-70 {
+    width: 100%;
+  }
+
+  .col-30 {
+    width: 92%;
+  }
+}
+
+
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+
+}
+
+.boxTradutor,.goog-te-banner-frame,.skiptranslate{
+  display: none;
+}
+
+.nav-translate img{
+  width: 30px;
 }

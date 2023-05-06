@@ -283,7 +283,7 @@ class Calendario {
   addTask() {
     calendario.newTaskModal.style.display = 'block';
 
-    calendario.backDrop.style.display = 'block';
+    // calendario.backDrop.style.display = 'block';
   }
 
   initButtons() {

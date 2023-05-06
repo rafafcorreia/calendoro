@@ -86,6 +86,7 @@ class Config {
                 $('#closeButton').text('Cerca');
                 $('#botao-concluir').text('Terminar tarea');
                 $('#breakLabel').text('Descanso');
+                $('#taskListHeader').text('Actividades');
                 break;
 
             case 'en':
@@ -113,6 +114,7 @@ class Config {
                 $('#closeButton').text('Close');
                 $('#botao-concluir').text('Finish task');
                 $('#breakLabel').text('Break time');
+                $('#taskListHeader').text('Activities');
                 break;
             case 'pt':
                 document.getElementById('pt').id = 'selectedFlag';
@@ -139,6 +141,7 @@ class Config {
                 $('#closeButton').text('Fechar');
                 $('#botao-concluir').text('Finalizar tarefa');
                 $('#breakLabel').text('Intervalo');
+                $('#taskListHeader').text('Atividades');
                 break;
             default:
                 break;

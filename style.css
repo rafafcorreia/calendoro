@@ -241,7 +241,7 @@ button {
   position: relative;
 }
 
-.taskTitle::after {
+/* .taskTitle::after {
   content: "Editar";
   position: relative;
   font-size: 8px;
@@ -252,7 +252,7 @@ button {
   padding: 3px 7px;
   background: #cbfdcb;
   transition: .6s all ease;
-}
+} */
 
 .taskTitle:hover::after {
   font-size: 9px;
